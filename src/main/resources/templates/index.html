@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Task 11: NPC Generator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+<h1>Auto-generated stat rolls for your D&D character:</h1>
+<form id="character_form">
+    <label for="race">Choose a race:</label>
+    <select id="race" name="race">
+        <option value="ELF">Elf</option>
+        <option value="HUMAN">Human</option>
+        <option value="DWARF">Dwarf</option>
+    </select><br>
+
+    <label for="sex">Choose the sex:</label>
+    <select id="sex" name="sex">
+        <option value="MALE">Male</option>
+        <option value="FEMALE">Female</option>
+    </select><br>
+
+    <label for="height_type">Choose a height type:</label>
+    <select id="height_type" name="height_type">
+        <option value="ABOVE_AVERAGE">Above average</option>
+        <option value="AVERAGE">Average</option>
+        <option value="BELOW_AVERAGE">Below average</option>
+    </select><br>
+
+    <input type="submit" value="Generate"><br>
+</form>
+
+<span><b>Name: </b></span>
+<span id="name_label"></span><br>
+
+<span><b>Sex: </b></span>
+<span id="sex_label"></span><br>
+
+<span><b>Height: </b></span>
+<span id="height_label"></span><br>
+
+<span><b>Race ability:</b></span>
+<span id="race_ability_label"></span><br>
+
+<!--<button id="rerollButton">Reroll</button>-->
+
+
+<script th:inline="javascript">
+    const form = document.getElementById('character_form');
+    const raceSelect = document.getElementById('race');
+    const sexSelect = document.getElementById('sex');
+    const heightTypeSelect = document.getElementById('height_type');
+    const nameLabel = document.getElementById('name_label');
+    const sexLabel = document.getElementById('sex_label');
+    const heightLabel = document.getElementById('height_label');
+    const raceAbilityLabel = document.getElementById('race_ability_label');
+
+    form.onsubmit = function (e) {
+        fetch("/character?" + new URLSearchParams({
+            race: raceSelect.value,
+            sex: sexSelect.value,
+            heightType: heightTypeSelect.value
+        }), {method: "GET"})
+            .then(response => response.json())
+            .then(charData => outputCharData(charData))
+        ;
+
+        e.preventDefault();
+    };
+
+    function outputCharData(characterData) {
+        console.log(characterData);
+        nameLabel.innerHTML = characterData.name;
+        // Is there an easy way to edit it from caps to normal (w/ first letter capitalized?)
+        sexLabel.innerHTML = characterData.sex;
+        heightLabel.innerHTML = characterData.height;
+        raceAbilityLabel.innerHTML = characterData.raceAbility;
+    }
+
+    // function getStatHtml(statRoll, statRollNumber) {
+    //     var rollSum = statRoll.diceRolls[0] + statRoll.diceRolls[1] + statRoll.diceRolls[2];
+    //     var usedRollsString = statRoll.diceRolls[0] + ', ' + statRoll.diceRolls[1] + ', ' + statRoll.diceRolls[2];
+    //     return 'Roll ' + statRollNumber + ': ' + rollSum +
+    //         ' (' + usedRollsString + ', <s>' + statRoll.diceRolls[3] + '</s>)';
+    // }
+    //
+    // rerollButton.onclick = () => rollStats();
+</script>
+
+</body>
+</html>
