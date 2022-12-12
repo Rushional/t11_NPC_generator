@@ -28,10 +28,11 @@ public class GetRaceHeight {
                 throw new IllegalArgumentException();
         }
         height = adjustByType(height, heightType);
-        height = randomizeHeight(height, 3);
         if (!(race.equals(Race.DWARF))) {
             if (sex.equals(Sex.FEMALE)) height = feminize(height);
         }
+        height = randomizeHeight(height, 3);
+        height = Math.round(height * 100) / (double) 100; // round to 2 decimal places
         return height;
     }
 
